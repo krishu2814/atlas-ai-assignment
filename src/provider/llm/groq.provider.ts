@@ -1,5 +1,6 @@
 import Groq from "groq-sdk";
 import { env } from "../../config/env.js";
+import { ATLAS_SYSTEM_PROMPT } from "../../ai/prompts/atlas.prompt.js";
 
 // creates a connection object
 const groq = new Groq({
@@ -12,6 +13,11 @@ export class GroqProvider {
     const completion = await groq.chat.completions.create({
       model: "llama-3.3-70b-versatile",
       messages: [
+        // system message to set the behavior of the model
+        {
+          role: "system",
+          content: ATLAS_SYSTEM_PROMPT,
+        },
         {
           role: "user",
           content: prompt,

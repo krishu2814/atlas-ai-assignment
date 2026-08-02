@@ -1,6 +1,6 @@
 import { ATLAS_SYSTEM_PROMPT } from "./atlas.prompt.js";
 
-export function buildAtlasPrompt(
+export function buildUserPrompt(
   context: string,
   history: string,
   message: string,

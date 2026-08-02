@@ -9,7 +9,7 @@ export class UserController {
 
   // fetch user profile based on the telegramId and return a formatted string with the user's information
   async getProfile(telegramId: string): Promise<string> {
-    const user = await this.userService.getById(telegramId);
+    const user = await this.userService.findByTelegramId(telegramId);
     if (!user) {
       return "User profile not found.";
     }

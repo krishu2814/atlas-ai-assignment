@@ -28,4 +28,7 @@ export class UserService {
   async getById(userId: string) {
     return this.userRepository.findById(userId);
   }
+  async findByTelegramId(telegramId: string) {
+    return this.userRepository.findByTelegramId(telegramId);
+  }
 }

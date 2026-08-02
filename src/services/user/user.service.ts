@@ -24,4 +24,8 @@ export class UserService {
     // if not -> create a new user
     return this.userRepository.create(data);
   }
+
+  async getById(userId: string) {
+    return this.userRepository.findById(userId);
+  }
 }

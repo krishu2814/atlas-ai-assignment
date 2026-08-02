@@ -4,6 +4,7 @@ import { ConversationController } from "../../controllers/conversation.controlle
 const conversationController = new ConversationController();
 
 export async function messageHandler(c: Context) {
+  if (!c.from) return;
   if (!c.message || !("text" in c.message)) {
     return;
   }

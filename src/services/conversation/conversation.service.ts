@@ -3,17 +3,20 @@ import { UserService } from "../user/user.service.js";
 import { MemoryService } from "../memory/memory.service.js";
 import { buildUserContext } from "../../ai/context/context.builder.js";
 import { buildConversationHistory } from "../../ai/context/history.builder.js";
+import { OnboardingService } from "../onboarding/onboarding.service.js";
 
 // this class calls the AIService to generate a response based on the input message
 export class ConversationService {
   private readonly aiService: AIService;
   private readonly userService: UserService;
   private readonly memoryService: MemoryService;
+  private readonly onboardingService: OnboardingService;
 
   constructor() {
     this.aiService = new AIService();
     this.userService = new UserService();
     this.memoryService = new MemoryService();
+    this.onboardingService = new OnboardingService();
   }
 
   async processMessage(data: {
@@ -30,14 +33,27 @@ export class ConversationService {
       firstName: data.firstName,
       lastName: data.lastName,
     });
+    if (!user.onboardingCompleted) {
+      // onboarding start with 0
+      await this.onboardingService.saveAnswer(user, data.message);
+
+      const nextQuestion = await this.onboardingService.getNextQuestion(
+        user.id,
+      );
+      if (nextQuestion) {
+        return nextQuestion.question;
+      }
+    }
+    const updatedUser = await this.userService.getById(user.id);
     // get history of the conversation for the user
+    // 2. save the message to memory
+    await this.memoryService.saveMessage(user.id, "user", data.message);
+
     const history = await this.memoryService.getConversationHistory(user.id);
     // format the history
     const formattedHistory = buildConversationHistory(history);
-    // 2. save the message to memory
-    await this.memoryService.saveMessage(user.id, "user", data.message);
     // 3. Generate AI response
-    const context = buildUserContext(user);
+    const context = buildUserContext(updatedUser!);
 
     const aiResponse = await this.aiService.generateResponse(
       formattedHistory,

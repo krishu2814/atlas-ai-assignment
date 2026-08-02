@@ -1,4 +1,5 @@
 import { prisma } from "../database/prisma.js";
+import type { Prisma } from "@prisma/client";
 
 export class UserRepository {
   async findByTelegramId(telegramId: string) {
@@ -25,6 +26,23 @@ export class UserRepository {
         industries: [],
         companies: [],
       },
+    });
+  }
+
+  async findById(id: string) {
+    return prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async update(userId: string, data: Prisma.UserUpdateInput) {
+    return prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data,
     });
   }
 }

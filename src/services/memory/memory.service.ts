@@ -16,4 +16,10 @@ export class MemoryService {
       content,
     });
   }
+
+  async getConversationHistory(userId: string) {
+    const messages = await this.repository.findRecentMessages(userId, 10);
+    // in reverse order to have the oldest message first
+    return messages.reverse();
+  }
 }

@@ -10,4 +10,12 @@ export class ConversationRepository {
       },
     });
   }
+
+  async findRecentMessages(userId: string, limit: number = 10) {
+    return prisma.conversation.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      take: limit,
+    });
+  }
 }

@@ -8,8 +8,12 @@ export class AIService {
     this.llmProvider = new GroqProvider();
   }
 
-  async generateResponse(context: string, message: string): Promise<string> {
-    const prompt = buildAtlasPrompt(context, message);
+  async generateResponse(
+    history: string,
+    context: string,
+    message: string,
+  ): Promise<string> {
+    const prompt = buildAtlasPrompt(context, history, message);
     const response = await this.llmProvider.generate(prompt);
     return response;
   }

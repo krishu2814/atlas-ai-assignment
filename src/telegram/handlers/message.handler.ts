@@ -9,7 +9,14 @@ export async function messageHandler(c: Context) {
   }
 
   const userMessage = c.message.text;
-  const response = await conversationController.handleMessage(userMessage);
+
+  const response = await conversationController.handleMessage({
+    telegramId: String(c.from?.id),
+    username: c.from?.username,
+    firstName: c.from?.first_name,
+    lastName: c.from?.last_name,
+    message: userMessage,
+  });
   // wait for the response from the conversation controller and send it back to the user
   await c.reply(response);
 }

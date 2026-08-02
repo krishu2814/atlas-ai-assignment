@@ -8,7 +8,13 @@ export class ConversationController {
     this.conversationService = new ConversationService();
   }
 
-  async handleMessage(message: string) {
-    return this.conversationService.processMessage(message);
+  async handleMessage(data: {
+    telegramId: string;
+    username?: string;
+    firstName?: string;
+    lastName?: string;
+    message: string;
+  }) {
+    return this.conversationService.processMessage(data);
   }
 }

@@ -14,6 +14,22 @@ model User {
   username    String?
   firstName   String?
   lastName    String?
+  interests   String[]
+  industries  String[]
+  companies   String[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  // relationships
+  conversations Conversation[]
+}
+
+
+model Conversation {
+  id String @id @default(uuid())
+  userId String
+  // connections
+  user User @relation(fields: [userId], references: [id],onDelete: Cascade)
+  role String
+  content String
+  createdAt DateTime @default(now())
 }

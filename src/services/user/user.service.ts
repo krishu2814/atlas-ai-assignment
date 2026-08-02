@@ -1,0 +1,27 @@
+import { UserRepository } from "../../repositories/user.repository.js";
+
+export class UserService {
+  private readonly userRepository: UserRepository;
+
+  constructor() {
+    this.userRepository = new UserRepository();
+  }
+
+  async getOrCreateUser(data: {
+    telegramId: string;
+    username?: string;
+    firstName?: string;
+    lastName?: string;
+  }) {
+    const existingUser = await this.userRepository.findByTelegramId(
+      data.telegramId,
+    );
+
+    if (existingUser) {
+      return existingUser;
+    }
+
+    // if not -> create a new user
+    return this.userRepository.create(data);
+  }
+}

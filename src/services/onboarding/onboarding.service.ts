@@ -1,6 +1,7 @@
 import type { User } from "@prisma/client";
 import { UserRepository } from "../../repositories/user.repository.js";
 import { ONBOARDING_QUESTIONS } from "../../constants/onboarding.js";
+import type { OnboardingResult } from "../../types/onboarding.js";
 
 export class OnboardingService {
   private readonly userRepository = new UserRepository();
@@ -15,7 +16,7 @@ export class OnboardingService {
   }
 
   // save the answer to the user's profile based on the current onboarding step
-  async saveAnswer(user: User, answer: string) {
+  async saveAnswer(user: User, answer: string): Promise<OnboardingResult> {
     const updates = [
       {
         profession: answer,
@@ -37,20 +38,29 @@ export class OnboardingService {
 
     const update = updates[user.onboardingStep];
     if (!update) {
-      return;
+      return { completed: true };
     }
     // update the user with the new data and increment the onboarding step
     await this.userRepository.update(user.id, update);
-  }
-
-  // Returns the next onboarding question after saving an answer
-  async getNextQuestion(userId: string) {
-    const user = await this.userRepository.findById(userId);
-
-    if (!user || user.onboardingCompleted) {
-      return null;
+    // Fetch updated user
+    const updatedUser = await this.userRepository.findById(user.id);
+    if (!updatedUser) {
+      throw new Error("User not found after onboarding update.");
     }
-
-    return ONBOARDING_QUESTIONS[user.onboardingStep];
+    // Onboarding finished
+    if (updatedUser.onboardingCompleted) {
+      return { completed: true };
+    }
+    // Return next question
+    const nextQuestion = ONBOARDING_QUESTIONS[updatedUser.onboardingStep];
+    if (!nextQuestion) {
+      return {
+        completed: true,
+      };
+    }
+    return {
+      completed: false,
+      nextQuestion: nextQuestion.question,
+    };
   }
 }

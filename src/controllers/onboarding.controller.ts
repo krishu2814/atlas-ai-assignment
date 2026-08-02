@@ -26,4 +26,19 @@ export class OnboardingController {
 
     return question?.question ?? "Welcome to Atlas AI!";
   }
+
+  async restartOnboarding(telegramId: string): Promise<string> {
+    const user = await this.userService.findByTelegramId(telegramId);
+    if (!user) {
+      return "User not found. Please use /start first.";
+    }
+    await this.userService.resetOnboarding(user.id);
+    const updatedUser = await this.userService.getById(user.id);
+    const question = this.onboardingService.getCurrentQuestion(updatedUser!);
+
+    return (
+      "🔄 Let's update your profile.\n\n" +
+      (question?.question ?? "Let's get started.")
+    );
+  }
 }

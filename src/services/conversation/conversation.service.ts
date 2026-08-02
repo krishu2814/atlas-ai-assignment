@@ -34,17 +34,20 @@ export class ConversationService {
       lastName: data.lastName,
     });
     if (!user.onboardingCompleted) {
-      // onboarding start with 0
-      await this.onboardingService.saveAnswer(user, data.message);
-
-      const nextQuestion = await this.onboardingService.getNextQuestion(
-        user.id,
+      const result = await this.onboardingService.saveAnswer(
+        user,
+        data.message,
       );
-      if (nextQuestion) {
-        return nextQuestion.question;
+      if (result.completed) {
+        return "✅ Your profile has been updated successfully.";
       }
+
+      return result.nextQuestion!;
     }
     const updatedUser = await this.userService.getById(user.id);
+    if (!updatedUser) {
+      throw new Error("User not found.");
+    }
     // get history of the conversation for the user
     // 2. save the message to memory
     await this.memoryService.saveMessage(user.id, "user", data.message);
@@ -53,6 +56,7 @@ export class ConversationService {
     // format the history
     const formattedHistory = buildConversationHistory(history);
     // 3. Generate AI response
+
     const context = buildUserContext(updatedUser!);
 
     const aiResponse = await this.aiService.generateResponse(

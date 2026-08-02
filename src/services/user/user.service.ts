@@ -31,4 +31,11 @@ export class UserService {
   async findByTelegramId(telegramId: string) {
     return this.userRepository.findByTelegramId(telegramId);
   }
+  // to reset the onboarding process for a user -> update
+  async resetOnboarding(userId: string) {
+    return this.userRepository.update(userId, {
+      onboardingCompleted: false,
+      onboardingStep: 0,
+    });
+  }
 }

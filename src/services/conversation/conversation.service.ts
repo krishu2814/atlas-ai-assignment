@@ -1,6 +1,7 @@
 import { AIService } from "../ai/ai.service.js";
 import { UserService } from "../user/user.service.js";
 import { MemoryService } from "../memory/memory.service.js";
+import { buildUserContext } from "../../ai/context/context.builder.js";
 
 // this class calls the AIService to generate a response based on the input message
 export class ConversationService {
@@ -31,7 +32,11 @@ export class ConversationService {
     // 2. save the message to memory
     await this.memoryService.saveMessage(user.id, "user", data.message);
     // 3. Generate AI response
-    const aiResponse = await this.aiService.generateResponse(data.message);
+    const context = buildUserContext(user);
+    const aiResponse = await this.aiService.generateResponse(
+      context,
+      data.message,
+    );
     // 4. Save AI response
     await this.memoryService.saveMessage(user.id, "assistant", aiResponse);
     // 5. Return response

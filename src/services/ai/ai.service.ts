@@ -51,7 +51,10 @@ export class AIService {
   async extractFacts(message: string): Promise<string[]> {
     const prompt = buildFactExtractionPrompt(message);
     const response = await this.llmProvider.generate(prompt);
-
+    console.log("========== FACT EXTRACTION ==========");
+    console.log("MESSAGE:", message);
+    console.log("LLM RESPONSE:", response);
+    console.log("====================================");
     try {
       const facts = JSON.parse(response);
       if (!Array.isArray(facts)) {

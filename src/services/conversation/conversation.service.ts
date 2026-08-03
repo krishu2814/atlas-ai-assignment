@@ -54,25 +54,21 @@ export class ConversationService {
     // get history of the conversation for the user
     // 2. save the message to memory
     await this.memoryService.saveMessage(user.id, "user", data.message);
-    // extract facts from the message and save them to semantic memory
-    const facts = await this.aiService.extractFacts(data.message);
-    for (const fact of facts) {
-      await this.semanticMemoryService.saveFact(user.id, fact);
-    }
+    // process the message to extract facts and save them to semantic memory
+    await this.semanticMemoryService.processMessage(
+      user.id,
+      data.message,
+      this.aiService,
+    );
 
-    const history = await this.memoryService.getConversationHistory(user.id);
-    // format the history
+    const [history, memories] = await Promise.all([
+      this.memoryService.getConversationHistory(user.id),
+      this.semanticMemoryService.getFacts(user.id),
+    ]);
+
     const formattedHistory = buildConversationHistory(history);
-    const memories = await this.semanticMemoryService.getFacts(user.id);
 
-    const semanticContext =
-      memories.length > 0
-        ? `
-        Long-term Memory:
-        ${memories.map((m) => `- ${m}`).join("\n")}
-        `
-        : "";
-    const context = buildUserContext(updatedUser, semanticContext);
+    const context = buildUserContext(updatedUser, memories);
     // 3. Generate AI response
     const aiResponse = await this.aiService.generateResponse(
       formattedHistory,

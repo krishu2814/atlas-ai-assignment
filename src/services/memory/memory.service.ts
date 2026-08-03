@@ -22,4 +22,8 @@ export class MemoryService {
     // in reverse order to have the oldest message first
     return messages.reverse();
   }
+
+  async clear(userId: string): Promise<void> {
+    await this.repository.deleteAll(userId);
+  }
 }

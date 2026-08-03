@@ -12,12 +12,14 @@ import {
 } from "./handlers/reset-confirm.handler.js";
 import { newsHandler } from "./handlers/news.handler.js";
 import { briefHandler } from "./handlers/brief.handler.js";
+import { MemoryHandler } from "./handlers/memory.handler.js";
 
 // console.log("Telegram token:", env.TELEGRAM_BOT_TOKEN?.slice(0, 10));
 export const bot = new Telegraf(env.TELEGRAM_BOT_TOKEN);
 
 const profileHandler = new ProfileHandler();
 const helpHandler = new HelpHandler();
+const memoryHandler = new MemoryHandler();
 
 bot.start((ctx) => startHandler(ctx));
 bot.command("profile", (ctx) => profileHandler.handle(ctx));
@@ -28,5 +30,6 @@ bot.action("reset_yes", resetYesHandler);
 bot.action("reset_no", resetNoHandler);
 bot.command("news", (c) => newsHandler(c));
 bot.command("brief", (c) => briefHandler(c));
+bot.command("memory", (ctx) => memoryHandler.handle(ctx));
 // catches all text messages including commands
 bot.on("text", (ctx) => messageHandler(ctx));

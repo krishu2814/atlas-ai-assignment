@@ -18,4 +18,12 @@ export class ConversationRepository {
       take: limit,
     });
   }
+
+  async deleteAll(userId: string) {
+    return prisma.semanticMemory.deleteMany({
+      where: {
+        userId,
+      },
+    });
+  }
 }

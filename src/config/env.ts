@@ -15,6 +15,7 @@ const envSchema = z.object({
     .default("info"),
   TELEGRAM_BOT_TOKEN: z.string().min(1),
   GROQ_API_KEY: z.string().min(1),
+  GNEWS_API_KEY: z.string().min(1),
 });
 
 export const env = envSchema.parse(process.env);

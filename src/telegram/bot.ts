@@ -10,6 +10,7 @@ import {
   resetYesHandler,
   resetNoHandler,
 } from "./handlers/reset-confirm.handler.js";
+import { newsHandler } from "./handlers/news.handler.js";
 
 // console.log("Telegram token:", env.TELEGRAM_BOT_TOKEN?.slice(0, 10));
 export const bot = new Telegraf(env.TELEGRAM_BOT_TOKEN);
@@ -24,5 +25,6 @@ bot.command("help", (c) => helpHandler.handle(c));
 bot.command("reset", (c) => resetHandler(c));
 bot.action("reset_yes", resetYesHandler);
 bot.action("reset_no", resetNoHandler);
+bot.command("news", (c) => newsHandler(c));
 // catches all text messages including commands
 bot.on("text", (ctx) => messageHandler(ctx));

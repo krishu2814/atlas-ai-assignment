@@ -45,4 +45,20 @@ export class UserRepository {
       data,
     });
   }
+
+  async resetProfile(userId: string) {
+    return prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        profession: null,
+        interests: [],
+        industries: [],
+        companies: [],
+        onboardingStep: 0,
+        onboardingCompleted: false,
+      },
+    });
+  }
 }

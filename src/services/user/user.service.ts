@@ -38,4 +38,8 @@ export class UserService {
       onboardingStep: 0,
     });
   }
+
+  async resetProfile(userId: string) {
+    return this.userRepository.resetProfile(userId);
+  }
 }

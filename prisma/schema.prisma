@@ -24,6 +24,7 @@ model User {
   updatedAt   DateTime @updatedAt
   // relationships
   conversations Conversation[]
+  semanticMemories SemanticMemory[]
 }
 
 
@@ -35,4 +36,12 @@ model Conversation {
   role String
   content String
   createdAt DateTime @default(now())
+}
+
+model SemanticMemory {
+  id        String   @id @default(cuid())
+  userId    String
+  fact      String
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

@@ -1,5 +1,6 @@
 import { GroqProvider } from "../../provider/llm/groq.provider.js";
 import { buildUserPrompt } from "../../ai/prompts/prompt.builder.js";
+import { buildFactExtractionPrompt } from "../../ai/memory/fact-extractor.js";
 // this class generates a response from the LLM provider based on the input message
 export class AIService {
   private readonly llmProvider: GroqProvider;
@@ -45,5 +46,23 @@ export class AIService {
         `;
 
     return this.llmProvider.generate(prompt);
+  }
+
+  async extractFacts(message: string): Promise<string[]> {
+    const prompt = buildFactExtractionPrompt(message);
+    const response = await this.llmProvider.generate(prompt);
+
+    try {
+      const facts = JSON.parse(response);
+      if (!Array.isArray(facts)) {
+        return [];
+      }
+      return facts.filter(
+        (fact): fact is string =>
+          typeof fact === "string" && fact.trim().length > 0,
+      );
+    } catch {
+      return [];
+    }
   }
 }

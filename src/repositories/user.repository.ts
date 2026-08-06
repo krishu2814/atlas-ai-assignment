@@ -61,4 +61,13 @@ export class UserRepository {
       },
     });
   }
+
+  // bullmq
+  async findOnboardedUsers() {
+    return prisma.user.findMany({
+      where: {
+        onboardingCompleted: true,
+      },
+    });
+  }
 }

@@ -42,4 +42,9 @@ export class UserService {
   async resetProfile(userId: string) {
     return this.userRepository.resetProfile(userId);
   }
+
+  // bullmq -> find all users who have completed onboarding -> to send them the morning brief
+  async getOnboardedUsers() {
+    return this.userRepository.findOnboardedUsers();
+  }
 }

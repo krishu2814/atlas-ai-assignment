@@ -18,6 +18,7 @@ model User {
   industries  String[]
   companies   String[]
   profession  String?
+  watchlists  Watchlist[] 
   onboardingCompleted Boolean @default(false)
   onboardingStep Int @default(0)
   createdAt   DateTime @default(now())
@@ -44,4 +45,14 @@ model SemanticMemory {
   fact      String
   createdAt DateTime @default(now())
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Watchlist {
+  id        String   @id @default(cuid())
+  company   String
+  symbol    String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  @@unique([userId, company])
 }

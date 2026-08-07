@@ -1,12 +1,18 @@
 import { GroqProvider } from "../../provider/llm/groq.provider.js";
 import { buildUserPrompt } from "../../ai/prompts/prompt.builder.js";
 import { buildFactExtractionPrompt } from "../../ai/memory/fact-extractor.js";
+import { buildCompanyExplanationPrompt } from "../../ai/prompts/finance.prompt.js";
 // this class generates a response from the LLM provider based on the input message
 export class AIService {
   private readonly llmProvider: GroqProvider;
 
   constructor() {
     this.llmProvider = new GroqProvider();
+  }
+
+  async explainCompany(companyData: unknown): Promise<string> {
+    const prompt = buildCompanyExplanationPrompt(companyData);
+    return this.llmProvider.generate(prompt);
   }
 
   async generateResponse(

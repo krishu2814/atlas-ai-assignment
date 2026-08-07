@@ -7,7 +7,8 @@ export async function scheduleMorningBrief() {
   await dispatchQueue.upsertJobScheduler(
     "morning-dispatch",
     {
-      pattern: "0 8 * * *",
+      // every minute
+      pattern: "60 * 1000", // later 8 am -> "0 8 * * *"
     },
     {
       name: "morning-dispatch",

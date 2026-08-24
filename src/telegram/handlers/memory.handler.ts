@@ -9,12 +9,19 @@ export class MemoryHandler {
   }
 
   async handle(c: Context) {
-    if (!c.from) {
-      return;
+    try {
+      if (!c.from) {
+        return;
+      }
+
+      await c.sendChatAction("typing");
+
+      const response = await this.memoryController.getMemory(String(c.from.id));
+
+      await c.reply(response);
+    } catch (error) {
+      console.error("Memory handler error:", error);
+      await c.reply("Unable to retrieve memory right now. Please try again later.");
     }
-
-    const response = await this.memoryController.getMemory(String(c.from.id));
-
-    await c.reply(response);
   }
 }

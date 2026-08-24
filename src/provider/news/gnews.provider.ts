@@ -13,6 +13,7 @@ export class GNewsProvider {
         max: 5,
         apikey: env.GNEWS_API_KEY,
       },
+      timeout: 10_000,
     });
 
     return data;

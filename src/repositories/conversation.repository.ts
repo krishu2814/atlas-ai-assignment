@@ -20,7 +20,7 @@ export class ConversationRepository {
   }
 
   async deleteAll(userId: string) {
-    return prisma.semanticMemory.deleteMany({
+    return prisma.conversation.deleteMany({
       where: {
         userId,
       },

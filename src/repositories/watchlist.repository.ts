@@ -39,4 +39,22 @@ export class WatchlistRepository {
       },
     });
   }
+
+  async findUsersWithWatchlists() {
+    const records = await prisma.watchlist.findMany({
+      select: {
+        user: {
+          select: {
+            id: true,
+            telegramId: true,
+          },
+        },
+      },
+      distinct: ["userId"],
+    });
+
+    return records
+      .map((r) => r.user)
+      .filter((u): u is { id: string; telegramId: string } => Boolean(u && u.telegramId));
+  }
 }

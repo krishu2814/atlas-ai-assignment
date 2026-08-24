@@ -63,7 +63,7 @@ export class ConversationService {
 
     const [history, memories] = await Promise.all([
       this.memoryService.getConversationHistory(user.id),
-      this.semanticMemoryService.getFacts(user.id),
+      this.semanticMemoryService.getRelevantFacts(user.id, data.message, 4),
     ]);
 
     const formattedHistory = buildConversationHistory(history);

@@ -21,6 +21,8 @@ const envSchema = z.object({
   REDIS_PORT: z.coerce.number().default(6379),
   REDIS_PASSWORD: z.string().optional(),
   FINNHUB_API_KEY: z.string().min(1),
+  HUGGINGFACE_API_KEY: z.string().optional(),
 });
 
 export const env = envSchema.parse(process.env);
+

@@ -43,6 +43,7 @@ model SemanticMemory {
   id        String   @id @default(cuid())
   userId    String
   fact      String
+  embedding Float[]  @default([])
   createdAt DateTime @default(now())
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

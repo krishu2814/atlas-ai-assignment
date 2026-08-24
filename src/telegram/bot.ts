@@ -14,6 +14,8 @@ import { newsHandler } from "./handlers/news.handler.js";
 import { briefHandler } from "./handlers/brief.handler.js";
 import { MemoryHandler } from "./handlers/memory.handler.js";
 import { companyHandler } from "./handlers/company.handler.js";
+import { stockHandler } from "./handlers/stock.handler.js";
+import { watchlistHandler } from "./handlers/watchlist.handler.js";
 
 // console.log("Telegram token:", env.TELEGRAM_BOT_TOKEN?.slice(0, 10));
 export const bot = new Telegraf(env.TELEGRAM_BOT_TOKEN);
@@ -33,5 +35,8 @@ bot.command("news", (c) => newsHandler(c));
 bot.command("brief", (c) => briefHandler(c));
 bot.command("memory", (c) => memoryHandler.handle(c));
 bot.command("company", companyHandler);
+bot.command("stock", stockHandler);
+bot.command("watchlist", watchlistHandler);
 // catches all text messages including commands
 bot.on("text", (ctx) => messageHandler(ctx));
+

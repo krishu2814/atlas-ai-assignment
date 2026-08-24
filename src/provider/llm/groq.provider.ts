@@ -11,7 +11,7 @@ export class GroqProvider {
   async generate(prompt: string): Promise<string> {
     // Creates a model response for the given chat conversation.
     const completion = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: env.GROQ_MODEL,
       messages: [
         // system message to set the behavior of the model
         {
